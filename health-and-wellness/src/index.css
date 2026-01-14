@@ -1,0 +1,298 @@
+body {
+  visibility: hidden;
+}
+
+body.styles-loaded {
+  visibility: visible;
+  transition: visibility 0s ease-in;
+}
+
+/* Tailwind imports must come after your base override */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*Sidebar Effects*/
+.nav-slide {
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid transparent;
+}
+
+.nav-slide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #14532d; /* Deep green */
+  z-index: 0;
+  transition: width 0.4s ease-in-out;
+}
+
+.nav-slide.active::before {
+  width: 100%;
+}
+
+.nav-slide > * {
+  position: relative;
+  z-index: 1;
+}
+
+/*Scrollbar Design*/
+/* custom-scrollbar.css */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #14532d; /* gray-300 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* src/styles/datepicker-custom.css */
+
+/* Popup container */
+/* Customize calendar popup container */
+.custom-datepicker-popup {
+  z-index: 9999;
+}
+
+/* Main calendar box */
+.custom-datepicker-popup .react-datepicker {
+  background-color: white;
+  border: 1px solid #d1d5db; /* Tailwind: border-gray-300 */
+  border-radius: 0.5rem; /* Tailwind: rounded-lg */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  font-family: "Inter", sans-serif;
+  padding: 0.75rem;
+}
+
+/* Month/Year dropdowns */
+.custom-datepicker-popup .react-datepicker__header {
+  background-color: #f9fafb; /* Tailwind: bg-gray-100 */
+  border-bottom: 1px solid #e5e7eb; /* Tailwind: border-gray-200 */
+}
+
+/* Days grid */
+.custom-datepicker-popup .react-datepicker__day {
+  color: #374151; /* Tailwind: text-gray-700 */
+  padding: 0.5rem;
+
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.custom-datepicker-popup .react-datepicker__day:hover {
+  background-color: #e0f2fe; /* Tailwind: bg-blue-100 */
+}
+
+/* Selected day */
+.custom-datepicker-popup .react-datepicker__day--selected {
+  background-color: #14532d; /* Tailwind: bg-blue-600 */
+  color: white;
+}
+
+/* Today’s day */
+.custom-datepicker-popup .react-datepicker__day--today {
+  border: 1px solid #14532d;
+}
+
+/* Month / year dropdowns */
+.custom-datepicker-popup .react-datepicker__month-dropdown,
+.custom-datepicker-popup .react-datepicker__year-dropdown {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+}
+
+.custom-datepicker-popup .react-datepicker__month-option,
+.custom-datepicker-popup .react-datepicker__year-option {
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.2s ease;
+  background-color: #14532d;
+  color: white;
+}
+
+.custom-datepicker-popup .react-datepicker__month-option:hover,
+.custom-datepicker-popup .react-datepicker__year-option:hover {
+  background-color: #14532d; /* hover blue */
+  color: white;
+}
+
+/* Tighter spacing between header and dropdowns */
+.custom-datepicker-popup .react-datepicker__header {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Fine-tune the select controls */
+.custom-datepicker-popup .react-datepicker__month-dropdown-container,
+.custom-datepicker-popup .react-datepicker__year-dropdown-container {
+  margin-top: 0.7rem;
+  margin-bottom: 0.15rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  color: #374151;
+}
+
+/* Completely remove default border and background from DatePicker input */
+.react-datepicker__input-container input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* Customize the calendar header (month/year and nav buttons) */
+.custom-datepicker-popup .react-datepicker__header {
+  background-color: #14532d; /* Tailwind's bg-blue-900 */
+  color: white;
+  border-bottom: none;
+}
+
+/* Month/year dropdowns */
+.custom-datepicker-popup .react-datepicker__current-month {
+  color: white;
+}
+
+/* Weekday headers (e.g., Mon, Tue) */
+.custom-datepicker-popup .react-datepicker__day-name {
+  color: white;
+}
+
+.custom-datepicker-popup .react-datepicker__month-option,
+.custom-datepicker-popup .react-datepicker__year-option {
+  background-color: #14532d !important;
+  color: black !important;
+}
+
+/* Optional: Style active/selected date for blue theme */
+.custom-datepicker-popup .react-datepicker__day--selected,
+.custom-datepicker-popup .react-datepicker__day--keyboard-selected {
+  background-color: #14532d;
+  color: white;
+}
+
+/* Navigation arrows spacing */
+.custom-datepicker-popup .react-datepicker__navigation {
+  top: 1rem; /* adjust vertical position if needed */
+}
+
+.custom-datepicker-popup .react-datepicker__navigation--previous {
+  left: 0.75rem; /* Tailwind's ml-3 */
+}
+
+.custom-datepicker-popup .react-datepicker__navigation--next {
+  right: 0.75rem; /* Tailwind's mr-3 */
+}
+
+/* Month and Year Dropdowns - Dark Blue Background & White Text */
+/* Main calendar header (month & year at top) */
+.react-datepicker__current-month,
+.react-datepicker__header {
+  background-color: #14532d; /* bg-blue-900 */
+  color: white;
+  border-bottom: none;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+/* Day names (Sun, Mon, ...) */
+.react-datepicker__day-name {
+  color: white;
+}
+
+/* Month & Year dropdown list */
+.react-datepicker__month-dropdown,
+.react-datepicker__year-dropdown {
+  background-color: #14532d;
+  color: white;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+/* Each option inside dropdown */
+.react-datepicker__month-option,
+.react-datepicker__year-option {
+  background-color: #14532d;
+  color: white;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+/* Hover state for options */
+.react-datepicker__month-option:hover,
+.react-datepicker__year-option:hover {
+  background-color: #166534; /* Tailwind's blue-600 */
+}
+
+/* Selected month/year in dropdown */
+.react-datepicker__month-option--selected,
+.react-datepicker__year-option--selected {
+  background-color: #1e40af; /* Tailwind's blue-800 */
+  font-weight: 600;
+}
+
+/* Remove border from header if needed */
+.react-datepicker__header {
+  border: none;
+}
+
+/* Optional: day cells */
+.react-datepicker__day {
+  color: black;
+}
+.react-datepicker__day--selected {
+  background-color: #166534;
+  color: white;
+}
+
+.select-animated-wrapper {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.select-animated-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border: 2px solid transparent;
+  border-bottom-color: #d1d5db; /* gray default */
+  pointer-events: none;
+  border-radius: 0.375rem;
+  transition: border 0.3s ease, border-color 0.3s ease;
+}
+
+.select-animated-wrapper:hover::before,
+.select-animated-wrapper:focus-within::before {
+  border-color: #2e3192; /* theme blue */
+}
+
+/* Optional: Custom scroll if needed */
+
+/* Fix background and text color for dropdowns */
+@layer utilities {
+  .animate-step-in {
+    @apply transition-all duration-300 ease-in-out opacity-0 translate-x-4;
+    animation: stepIn 0.3s forwards;
+  }
+
+  @keyframes stepIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}

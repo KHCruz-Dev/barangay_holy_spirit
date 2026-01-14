@@ -1,0 +1,15 @@
+export const REQUIRED_FIELDS = [
+  "firstName",
+  "middleName",
+  "lastName",
+  "birthDate",
+  "gender",
+  "civilStatus",
+  "nationality",
+  "region",
+  "province",
+  "cityMunicipality",
+  "barangay",
+  "subdivisionVillage",
+  "streetRoad",
+];

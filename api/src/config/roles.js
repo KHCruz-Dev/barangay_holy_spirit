@@ -1,0 +1,16 @@
+/**
+ * CENTRAL ROLE DEFINITIONS (BACKEND)
+ * These MUST match the frontend role strings
+ */
+
+const ROLES = {
+  ADMINISTRATOR: "ADMINISTRATOR",
+  ID_PRINTER: "ID_PRINTER",
+  ENCODER: "ENCODER",
+  REGISTRATION_STAFF: "REGISTRATION_STAFF",
+  COORDINATOR: "COORDINATOR",
+};
+
+module.exports = {
+  ROLES,
+};
