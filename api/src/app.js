@@ -37,16 +37,43 @@ const usersRoutes = require("./routes/userRoutes");
 const dashboardSummaryRoutes = require("./routes/residentProfileSummaryRoutes");
 
 const app = express();
+app.set("trust proxy", 1);
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://barangayholyspirit.com",
+  "https://www.barangayholyspirit.com",
+];
+
+// Middlewares
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173", // 👈 FRONTEND ORIGIN
+//     credentials: true, // 👈 ALLOW COOKIES
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173", // 👈 FRONTEND ORIGIN
-    credentials: true, // 👈 ALLOW COOKIES
+    origin: function (origin, callback) {
+      // allow server-to-server / curl / health checks
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(cookieParser());
 app.use(express.json()); // Parse JSON bodies
 

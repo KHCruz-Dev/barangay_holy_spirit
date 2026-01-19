@@ -100,6 +100,7 @@ const PatientModal = ({ patient, onClose }) => {
             <img
               src={patient.pictureUrl}
               alt="Patient"
+              crossOrigin="anonymous"
               className="w-32 h-32 rounded-full object-cover border-4 border-green-900 shadow"
             />
             <button className="w-full text-sm font-semibold text-green-900 py-2 rounded-lg border border-green-900 bg-white hover:bg-green-900 hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-300 flex items-center justify-center gap-2">

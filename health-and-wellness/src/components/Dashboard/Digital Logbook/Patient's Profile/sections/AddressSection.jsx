@@ -7,12 +7,12 @@ const AddressSection = ({
   errors,
   handleBlur,
 
-  regionData,
-  provinceOptions,
-  municipalityOptions,
-  barangayOptions,
-  subdivisionOptions,
-  streetOptions,
+  regionData = [],
+  provinceOptions = [],
+  municipalityOptions = [],
+  barangayOptions = [],
+  subdivisionOptions = [],
+  streetOptions = [],
 
   handleRegionChange,
   handleProvinceChange,
@@ -22,6 +22,13 @@ const AddressSection = ({
   handleStreetChange,
   updateResident,
 }) => {
+  const hasRegion = !!resident.regionId;
+  const hasProvince = !!resident.provinceId;
+  const hasMunicipality = !!resident.municipalityId;
+  const hasBarangay = !!resident.barangayId;
+  const hasSubdivision = !!resident.subdivisionId;
+  const hasStreet = !!resident.streetId;
+
   return (
     <div className="bg-white shadow-sm p-6 border rounded-lg">
       <h3 className="text-gray-600 font-semibold text-sm mb-4 uppercase flex items-center gap-2">
@@ -30,90 +37,72 @@ const AddressSection = ({
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Region */}
+        {/* Region (ALWAYS ENABLED) */}
         <ComboBoxFloatingLabel
           label="Region"
           options={regionData}
-          value={resident.region}
+          value={resident.regionId}
           requireMatch
-          isInvalid={!!errors.region}
-          errorMessage={errors.region}
-          onChange={(value) => {
-            handleRegionChange(value);
-            handleBlur("region");
-          }}
+          isInvalid={!!errors.regionId}
+          errorMessage={errors.regionId}
+          onChange={handleRegionChange}
         />
 
+        {/* Province */}
         <ComboBoxFloatingLabel
           label="Province"
           options={provinceOptions}
-          value={resident.province}
+          value={resident.provinceId}
           requireMatch
-          disabled={!resident.region}
-          isInvalid={!!errors.province}
-          errorMessage={errors.province}
-          onChange={(value) => {
-            handleProvinceChange(value);
-            handleBlur("province");
-          }}
+          disabled={!hasRegion}
+          onChange={handleProvinceChange}
         />
 
+        {/* Municipality */}
         <ComboBoxFloatingLabel
           label="City / Municipality"
           options={municipalityOptions}
-          value={resident.cityMunicipality}
+          value={resident.municipalityId}
           requireMatch
-          disabled={!resident.province}
-          isInvalid={!!errors.cityMunicipality}
-          errorMessage={errors.cityMunicipality}
-          onChange={(value) => {
-            handleMunicipalityChange(value);
-          }}
+          disabled={!hasProvince}
+          onChange={handleMunicipalityChange}
         />
 
+        {/* Barangay */}
         <ComboBoxFloatingLabel
           label="Barangay"
           options={barangayOptions}
-          value={resident.barangay}
+          value={resident.barangayId}
           requireMatch
-          disabled={!resident.cityMunicipality}
-          isInvalid={!!errors.barangay}
-          errorMessage={errors.barangay}
-          onChange={(value) => {
-            handleBarangayChange(value);
-          }}
+          disabled={!hasMunicipality}
+          onChange={handleBarangayChange}
         />
 
+        {/* Subdivision */}
         <ComboBoxFloatingLabel
           label="Subdivision / Village"
           options={subdivisionOptions}
-          value={resident.subdivisionVillage}
+          value={resident.subdivisionId}
           requireMatch
-          disabled={!resident.barangay}
-          isInvalid={!!errors.subdivisionVillage}
-          errorMessage={errors.subdivisionVillage}
-          onChange={(value) => {
-            handleSubdivisionChange(value);
-          }}
+          disabled={!hasBarangay}
+          onChange={handleSubdivisionChange}
         />
 
+        {/* Street */}
         <ComboBoxFloatingLabel
           label="Street / Road"
           options={streetOptions}
-          value={resident.streetRoad}
+          value={resident.streetId}
           requireMatch
-          disabled={!resident.subdivisionVillage}
-          isInvalid={!!errors.streetRoad}
-          errorMessage={errors.streetRoad}
-          onChange={(value) => {
-            handleStreetChange(value);
-          }}
+          disabled={!hasSubdivision}
+          onChange={handleStreetChange}
         />
 
         {/* Street Number */}
         <InputFloatingLabel
           label="Street Number / #"
           value={resident.streetNumber}
+          disabled={!hasStreet}
           onChange={updateResident("streetNumber")}
           onBlur={() => handleBlur("streetNumber")}
           isInvalid={!!errors.streetNumber}

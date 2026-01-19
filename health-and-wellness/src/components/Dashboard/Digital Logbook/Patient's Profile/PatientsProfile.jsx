@@ -53,6 +53,8 @@ const PatientsProfile = () => {
 
   const { user } = useAuth();
 
+  const [recordSubType, setRecordSubType] = useState("DEFAULT");
+
   // ID Printer Status Filter
   const [idStatusFilter, setIdStatusFilter] = useState(null);
 
@@ -63,6 +65,8 @@ const PatientsProfile = () => {
 
   const [bulkAvatarMap, setBulkAvatarMap] = useState({});
 
+  const [barangayFilter, setBarangayFilter] = useState(null);
+
   const { residents, total, totalPages, loading, error, refetch } =
     useResidents({
       page: currentPage,
@@ -70,6 +74,7 @@ const PatientsProfile = () => {
       search: debouncedSearch,
       recordType: activeCategory,
       idStatus: idStatusFilter,
+      barangayId: barangayFilter, // ✅ NEW
     });
 
   const startIndex = total === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
@@ -122,12 +127,21 @@ const PatientsProfile = () => {
 
   const openAddResident = () => {
     setRecordType("RESIDENT");
+    setRecordSubType("DEFAULT");
+    setSelectedResident(null);
+    setIsModalOpen(true);
+  };
+
+  const openAddDistrict2Resident = () => {
+    setRecordType("RESIDENT");
+    setRecordSubType("DISTRICT_2");
     setSelectedResident(null);
     setIsModalOpen(true);
   };
 
   const openAddNonResident = () => {
     setRecordType("NON_RESIDENT");
+    setRecordSubType("DEFAULT");
     setSelectedResident(null);
     setIsModalOpen(true);
   };
@@ -394,6 +408,14 @@ const PatientsProfile = () => {
     }
   }, [user]);
 
+  const BARANGAYS = {
+    HOLY_SPIRIT: "bcd4ef7a-6c32-4014-992a-6ccebd894b79",
+    PAYATAS: "705c13e1-d45a-4430-989a-1aaa143bb934",
+    COMMONWEALTH: "85624e18-9b9a-4ebb-a1e6-99d33897a2fb",
+    BATASAN_HILLS: "b9c61d5d-6c59-457e-bd93-f4656ffbcc2f",
+    BAGONG_SILANGAN: "c5ba5980-081f-44b9-add2-61dbfab7d692",
+  };
+
   return (
     <div className={loading || modalLoading ? "cursor-wait" : ""}>
       {/* Header */}
@@ -404,10 +426,8 @@ const PatientsProfile = () => {
         Manage and monitor health & wellness Resident's Profile.
       </p>
 
-      <hr className="my-4 border-gray-400" />
-
       {/* Summary */}
-      <h1 className="text-lg text-gray-800">Quick Overview</h1>
+      <h1 className="text-lg font-semibold text-gray-800 ">Quick Overview</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2 pb-6">
         {summaryData.map((item, index) => (
           <SummaryCard key={index} {...item} />
@@ -416,122 +436,128 @@ const PatientsProfile = () => {
 
       <hr className="my-1 border-gray-400" />
 
-      {/* Search + Add */}
-      <h1 className="text-lg text-gray-800 mt-4 mb-2">
-        Search and Filter Profiles
+      {/* ================= SEARCH ================= */}
+      <h1 className="text-lg font-semibold text-gray-800 mt-4">
+        Search Profiles
       </h1>
+      <p className="text-xs text-gray-500 mb-2">Find residents by name or ID</p>
 
-      <div className="flex flex-col md:flex-row gap-3 justify-between mb-4">
-        <div className="w-full md:w-96 bg-white border rounded-md p-4 shadow-sm">
-          <InputFloatingLabel
-            label="Search Profile (Name / ID)"
-            value={search}
-            onChange={(e) => {
-              setCurrentPage(1); // reset pagination on search
-              setSearch(e.target.value);
-            }}
-          />
-        </div>
-
-        <div className="flex items-center md:items-end gap-4">
-          <button
-            onClick={openAddNonResident}
-            className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md border border-green-800 text-green-800 bg-white hover:bg-green-800 hover:text-white transition-colors duration-200"
-          >
-            <MdAdd size={18} />
-            Add New Non-Resident
-          </button>
-          <button
-            onClick={handleAdd}
-            className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md border border-green-800 text-green-800 bg-white hover:bg-green-800 hover:text-white transition-colors duration-200"
-          >
-            <MdAdd size={18} />
-            Add New Resident (District 2)
-          </button>
-        </div>
+      <div className="w-full md:w-96 bg-white border rounded-md p-4 shadow-sm mb-6">
+        <InputFloatingLabel
+          label="Search Profile (Name / ID)"
+          value={search}
+          onChange={(e) => {
+            setCurrentPage(1);
+            setSearch(e.target.value);
+          }}
+        />
       </div>
 
-      <hr className="my-1 border-gray-400" />
+      {/* ================= ACTIONS ================= */}
+      <hr className="my-1 border-gray-400 mb-4" />
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap items-center gap-2 mt-4 mb-3">
-        {/* NORMAL USERS (NOT ID PRINTER) */}
-        {user?.role !== ROLES.ID_PRINTER && (
-          <>
-            <button
-              onClick={() => {
-                setActiveCategory("RESIDENT");
-                setRecordType("RESIDENT");
-                setIdStatusFilter(null); // ✅ ADD
-                setSelectedIds([]);
-                setCurrentPage(1);
-              }}
-              className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
-                activeCategory === "RESIDENT"
-                  ? "bg-green-800 text-white border-green-800"
-                  : "bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
-              }`}
-            >
-              Barangay Holy Spirit Residents
-            </button>
+      <div className="flex items-center justify-end mb-2">
+        <h1 className="text-lg font-semibold text-gray-700">
+          Create New Profile
+        </h1>
+      </div>
 
-            <button
-              onClick={() => {
-                setActiveCategory("NON_RESIDENT");
-                setRecordType("NON_RESIDENT");
-                setIdStatusFilter(null); // ✅ ADD
-                setSelectedIds([]);
-                setCurrentPage(1);
-              }}
-              className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
-                activeCategory === "NON_RESIDENT"
-                  ? "bg-green-800 text-white border-green-800"
-                  : "bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
-              }`}
-            >
-              Non-Residents
-            </button>
-          </>
-        )}
+      <div className="flex flex-wrap gap-3 mb-6 justify-end">
+        <button
+          onClick={openAddNonResident}
+          className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md
+      border border-green-800 text-green-800 bg-white
+      hover:bg-green-800 hover:text-white transition"
+        >
+          <MdAdd size={18} />
+          Non-Resident
+        </button>
 
-        {/* ID PRINTER ONLY */}
-        {user?.role === ROLES.ID_PRINTER && (
-          <>
-            <span className="text-xs font-semibold text-gray-600 uppercase mr-2">
-              Filter by ID Status:
-            </span>
-            {ID_STATUSES.map((status) => (
-              <button
-                key={status}
-                onClick={() => {
-                  setIdStatusFilter(status);
-                  setSelectedIds([]);
-                  setCurrentPage(1);
-                }}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition ${
-                  idStatusFilter === status
-                    ? "bg-green-800 text-white border-green-800"
-                    : "bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
-                }`}
-              >
-                {status} ({idStatusCounts[status] ?? 0})
-              </button>
-            ))}
+        <button
+          onClick={openAddDistrict2Resident}
+          className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md
+      border border-green-800 text-green-800 bg-white
+      hover:bg-green-800 hover:text-white transition"
+        >
+          <MdAdd size={18} />
+          District 2 Resident
+        </button>
 
-            {/* Clear Filter */}
-            <button
-              onClick={() => {
-                setIdStatusFilter(null);
-                setSelectedIds([]);
-                setCurrentPage(1);
-              }}
-              className="px-3 py-1.5 text-xs font-semibold rounded-full border
-          bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
-            >
-              Clear
-            </button>
-          </>
-        )}
+        <button
+          onClick={openAddResident}
+          className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md
+      border border-green-800 text-green-800 bg-white
+      hover:bg-green-800 hover:text-white transition"
+        >
+          <MdAdd size={18} />
+          Barangay Resident
+        </button>
+      </div>
+
+      {/* ================= FILTERS ================= */}
+      <h1 className="text-lg font-semibold text-gray-700 mb-2">
+        Filter Records
+      </h1>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        {[
+          { label: "Barangay Holy Spirit", id: BARANGAYS.HOLY_SPIRIT },
+          { label: "Barangay Payatas", id: BARANGAYS.PAYATAS },
+          { label: "Barangay Commonwealth", id: BARANGAYS.COMMONWEALTH },
+          { label: "Barangay Batasan Hills", id: BARANGAYS.BATASAN_HILLS },
+          { label: "Barangay Bagong Silangan", id: BARANGAYS.BAGONG_SILANGAN },
+        ].map((b) => (
+          <button
+            key={b.id}
+            onClick={() => {
+              setActiveCategory("RESIDENT");
+              setRecordType("RESIDENT");
+              setBarangayFilter(b.id);
+              setSelectedIds([]);
+              setCurrentPage(1);
+            }}
+            className={`px-4 py-2 text-sm font-medium rounded-md border transition ${
+              barangayFilter === b.id
+                ? "bg-green-800 text-white border-green-800"
+                : "bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
+            }`}
+          >
+            {b.label}
+          </button>
+        ))}
+
+        {/* DISTRICT 2 */}
+        <button
+          onClick={() => {
+            setActiveCategory("RESIDENT");
+            setRecordType("RESIDENT");
+            setBarangayFilter(null);
+            setRecordSubType("DISTRICT_2");
+            setCurrentPage(1);
+          }}
+          className="px-4 py-2 text-sm font-medium rounded-md border
+      bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
+        >
+          District 2 Residents
+        </button>
+
+        {/* NON RESIDENTS */}
+        <button
+          onClick={() => {
+            setActiveCategory("NON_RESIDENT");
+            setRecordType("NON_RESIDENT");
+            setBarangayFilter(null);
+            setSelectedIds([]);
+            setCurrentPage(1);
+          }}
+          className={`px-4 py-2 text-sm font-medium rounded-md border transition ${
+            activeCategory === "NON_RESIDENT"
+              ? "bg-green-800 text-white border-green-800"
+              : "bg-white text-green-800 border-green-800 hover:bg-green-800 hover:text-white"
+          }`}
+        >
+          Non Residents
+        </button>
       </div>
 
       {/* Cards */}
@@ -747,6 +773,7 @@ const PatientsProfile = () => {
         onClose={() => setIsModalOpen(false)}
         existingResident={selectedResident}
         recordType={recordType}
+        recordSubType={recordSubType}
         onSaved={async () => {
           await refetch(); // 🔄 fetch fresh data
           setCurrentPage(1); // ✅ optional: reset to page 1 on add

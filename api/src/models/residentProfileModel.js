@@ -597,7 +597,14 @@ async function getAllResidentsProfileByRole(user) {
   return result.rows;
 }
 
-async function searchResidentsPage({ limit, offset, query, idStatus, user }) {
+async function searchResidentsPage({
+  limit,
+  offset,
+  query,
+  idStatus,
+  barangayId,
+  user,
+}) {
   const params = [];
   let where = [];
   let i = 1;
@@ -615,6 +622,12 @@ async function searchResidentsPage({ limit, offset, query, idStatus, user }) {
   if (idStatus) {
     where.push(`rp.alagang_valmocina_id_status = $${i}`);
     params.push(idStatus);
+    i++;
+  }
+
+  if (barangayId) {
+    where.push(`rp.gis_barangay_id = $${i}`);
+    params.push(barangayId);
     i++;
   }
 

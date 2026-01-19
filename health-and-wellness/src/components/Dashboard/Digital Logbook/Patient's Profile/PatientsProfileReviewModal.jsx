@@ -19,9 +19,10 @@ const PatientsProfileReviewModal = ({
   avatarPreview,
   isSaving,
   isEditMode, // ✅ ADD
+  recordSubType = "DEFAULT",
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-
+  const isDistrict2 = recordSubType === "DISTRICT_2";
   useEffect(() => {
     if (isOpen) {
       const t = setTimeout(() => setIsVisible(true), 10);
@@ -100,14 +101,22 @@ const PatientsProfileReviewModal = ({
           <img
             src={avatarPreview}
             alt="Resident"
+            crossOrigin="anonymous"
             className="w-20 h-20 rounded-sm border-4 border-green-900 object-cover"
           />
 
           <div className="flex-1">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <FaUser className="text-green-800" />
-              {isEditMode ? "Review Updates" : "Review Resident Details"}
+              {isEditMode
+                ? isDistrict2
+                  ? "Review District 2 Resident Updates"
+                  : "Review Updates"
+                : isDistrict2
+                ? "Review District 2 Resident Details"
+                : "Review Resident Details"}
             </h2>
+
             <p className="text-xs text-gray-500 mt-1">
               {isEditMode
                 ? "Please confirm before updating this record."

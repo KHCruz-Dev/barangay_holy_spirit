@@ -32,11 +32,15 @@ async function getResidentsPageHandler(req, res) {
     const search = req.query.search?.trim() || "";
     const idStatus = req.query.idStatus || null;
 
+    // ✅ FIX: DEFINE barangayId
+    const barangayId = req.query.barangayId || null;
+
     const result = await searchResidentsPage({
       limit,
       offset,
       query: search,
       idStatus,
+      barangayId, // ✅ NOW DEFINED
       user: req.user,
     });
 
@@ -46,6 +50,7 @@ async function getResidentsPageHandler(req, res) {
     res.status(500).json({ message: "Server error" });
   }
 }
+
 // GET /api/residentsProfile/all  (full list with all joins - use carefully)
 async function getAllResidentsProfileHandler(req, res) {
   try {

@@ -8,7 +8,8 @@ export function useResidents({
   limit,
   search,
   recordType,
-  idStatus, // ✅ ADD THIS
+  idStatus,
+  barangayId, // ✅ ADDED
 }) {
   const [residents, setResidents] = useState([]);
   const [total, setTotal] = useState(0);
@@ -40,7 +41,13 @@ export function useResidents({
       const raw =
         recordType === "NON_RESIDENT"
           ? await getNonResidents({ page, limit, search })
-          : await getResidents({ page, limit, search, idStatus }); // ✅ PASS idStatus
+          : await getResidents({
+              page,
+              limit,
+              search,
+              idStatus,
+              barangayId, // ✅ HERE
+            });
 
       const data = normalize(raw);
 
@@ -56,7 +63,7 @@ export function useResidents({
 
   useEffect(() => {
     fetchData();
-  }, [page, limit, search, recordType, idStatus]); // ✅ WATCH idStatus
+  }, [page, limit, search, recordType, idStatus, barangayId]); // ✅ HERE
 
   return {
     residents,

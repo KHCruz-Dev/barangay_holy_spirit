@@ -5,13 +5,17 @@ export async function waitForImages(container) {
   const images = container.querySelectorAll("img");
 
   await Promise.all(
-    Array.from(images).map(
-      (img) =>
-        img.complete ||
-        new Promise((resolve) => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        })
-    )
+    Array.from(images).map((img) => {
+      // Already loaded successfully
+      if (img.complete && img.naturalWidth > 0) {
+        return Promise.resolve();
+      }
+
+      // Wait for load or error
+      return new Promise((resolve) => {
+        img.onload = () => resolve();
+        img.onerror = () => resolve(); // do NOT reject
+      });
+    })
   );
 }

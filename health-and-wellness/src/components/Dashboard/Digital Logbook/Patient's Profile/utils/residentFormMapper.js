@@ -1,5 +1,6 @@
 import { generateBarangayResidentId } from "../../../../../utils/idHelpers";
 import { calculateAgeFromDate } from "../../../../../utils/calculateAgeFromDate";
+
 export const makeEmptyResident = (alagangId) => ({
   alagangValmocinaID: alagangId,
   idStatus: "Pending",
@@ -30,12 +31,12 @@ export const makeEmptyResident = (alagangId) => ({
   prcID: "",
   driversLicense: "",
 
-  region: "",
-  province: "",
-  cityMunicipality: "",
-  barangay: "",
-  subdivisionVillage: "",
-  streetRoad: "",
+  regionId: undefined,
+  provinceId: undefined,
+  municipalityId: undefined,
+  barangayId: undefined,
+  subdivisionId: undefined,
+  streetId: undefined,
   streetNumber: "",
 
   isVoter: false,
@@ -92,17 +93,15 @@ export const mapExistingResidentToForm = (apiResident) => {
     idStatus: apiResident.alagang_valmocina_id_status || "Pending",
 
     // 📍 Address (FIXED street number)
-    region: apiResident.gis_region_name || "",
-    province: apiResident.gis_province_name || "",
-    cityMunicipality: apiResident.gis_municipality_name || "",
-    barangay: apiResident.gis_barangay_name || "",
-    subdivisionVillage: apiResident.gis_subdivision_name || "",
-    streetRoad: apiResident.gis_street_name || "",
+    // 📍 GIS (IDS ONLY)
+    regionId: apiResident.gis_region_id ?? undefined,
+    provinceId: apiResident.gis_province_id ?? undefined,
+    municipalityId: apiResident.gis_municipality_id ?? undefined,
+    barangayId: apiResident.gis_barangay_id ?? undefined,
+    subdivisionId: apiResident.gis_subdivision_id ?? undefined,
+    streetId: apiResident.gis_streets_id ?? undefined,
     streetNumber:
-      apiResident.gis_street_number ??
-      apiResident.street_number ??
-      apiResident.streetNumber ??
-      "",
+      apiResident.gis_street_number ?? apiResident.street_number ?? "",
 
     // 🧩 Toggles (FIXED)
     isVoter: Boolean(apiResident.is_voter ?? apiResident.isVoter),

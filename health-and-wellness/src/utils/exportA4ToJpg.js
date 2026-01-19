@@ -6,12 +6,21 @@ export async function exportA4ToJpg(a4Ref, filename) {
     throw new Error("A4 canvas not mounted");
   }
 
-  // 1️⃣ Render DOM → Blob
+  await waitForImages(a4Ref.current);
+
   const blob = await toBlob(a4Ref.current, {
     backgroundColor: "#ffffff",
-    cacheBust: true,
-    useCORS: true,
     pixelRatio: 1,
+
+    // 🔑 CRITICAL
+    useCORS: true,
+    cacheBust: false,
+
+    // 🔑 DO NOT refetch images
+    imagePlaceholder: undefined,
+
+    // 🔑 Ignore failed image fetches (prevents hard crash)
+    onImageError: () => true,
   });
 
   if (!blob) {

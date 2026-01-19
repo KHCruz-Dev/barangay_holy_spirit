@@ -18,23 +18,6 @@ export function buildResidentPayload({
     resident.emergencyContactNumber
   );
 
-  const selectedRegion = regionData.find((r) => r.value === resident.region);
-  const selectedProvince = provinceData.find(
-    (p) => p.value === resident.province
-  );
-  const selectedMunicipality = municipalityData.find(
-    (m) => m.value === resident.cityMunicipality
-  );
-  const selectedBarangay = barangayData.find(
-    (b) => b.value === resident.barangay
-  );
-  const selectedSubdivision = subdivisionData.find(
-    (s) => s.value === resident.subdivisionVillage
-  );
-  const selectedStreet = streetData.find(
-    (st) => st.value === resident.streetRoad
-  );
-
   return {
     // 🧍 Basic Info
     first_name: resident.firstName,
@@ -73,13 +56,13 @@ export function buildResidentPayload({
 
     is_id_printed: false,
 
-    // 📍 GIS
-    gis_region_id: selectedRegion?.regionId,
-    gis_province_id: selectedProvince?.provinceId,
-    gis_municipality_id: selectedMunicipality?.municipalityId,
-    gis_barangay_id: selectedBarangay?.barangayId,
-    gis_subdivision_id: selectedSubdivision?.subdivisionId,
-    gis_streets_id: selectedStreet?.streetId,
+    // 📍 GIS (DIRECT IDS)
+    gis_region_id: resident.regionId,
+    gis_province_id: resident.provinceId,
+    gis_municipality_id: resident.municipalityId,
+    gis_barangay_id: resident.barangayId,
+    gis_subdivision_id: resident.subdivisionId,
+    gis_streets_id: resident.streetId,
     gis_street_number: resident.streetNumber?.trim() || null,
 
     // 🪪 Dynamic Identification Cards

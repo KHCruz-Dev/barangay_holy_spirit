@@ -74,6 +74,7 @@ const About = () => {
         </h3>
         <img
           src={HAWNow}
+          crossOrigin="anonymous"
           alt="Health and Wellness Now"
           className="w-full rounded-xl shadow-md border border-gray-200 object-cover"
         />

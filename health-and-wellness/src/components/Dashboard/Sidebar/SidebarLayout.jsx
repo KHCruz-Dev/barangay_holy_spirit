@@ -56,6 +56,7 @@ const SidebarLayout = ({ activeItem, setActiveItem }) => {
           <img
             src={HAWLogo}
             alt="Alagang Valmocina"
+            crossOrigin="anonymous"
             className="h-10 w-10 object-contain"
           />
           <div className="leading-tight">

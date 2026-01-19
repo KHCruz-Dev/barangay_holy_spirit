@@ -5,6 +5,7 @@ const {
   getAccountForLogin,
   getAccountById,
 } = require("../models/accountModel");
+const { getCookieOptions } = require("../config/cookieOptions");
 
 const bcrypt = require("bcrypt");
 const { signToken } = require("../utils/jwt");
@@ -130,12 +131,7 @@ async function loginAccount(req, res) {
       department_id: account.department_id,
     });
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    });
+    res.cookie("token", token, getCookieOptions());
 
     return res.status(200).json({
       message: "Login successful",
@@ -159,7 +155,7 @@ async function loginAccount(req, res) {
 }
 
 function logoutAccount(req, res) {
-  res.clearCookie("access_token");
+  res.clearCookie("token", getCookieOptions());
   res.json({ message: "Logged out" });
 }
 
