@@ -105,7 +105,7 @@ const PatientsProfileModal = ({
   const gendersData = useMemo(
     () =>
       hris.genders?.map((g) => ({ label: g.gender, value: g.gender })) ?? [],
-    [hris.genders]
+    [hris.genders],
   );
 
   const civilStatusData = useMemo(
@@ -114,7 +114,7 @@ const PatientsProfileModal = ({
         label: c.civil_status,
         value: c.civil_status,
       })) ?? [],
-    [hris.civilStatus]
+    [hris.civilStatus],
   );
 
   const prefixData = useMemo(
@@ -123,7 +123,7 @@ const PatientsProfileModal = ({
         label: p.prefix_category,
         value: p.prefix_category,
       })) ?? [],
-    [hris.prefixes]
+    [hris.prefixes],
   );
 
   const suffixData = useMemo(
@@ -132,7 +132,7 @@ const PatientsProfileModal = ({
         label: s.suffix_category,
         value: s.suffix_category,
       })) ?? [],
-    [hris.suffixes]
+    [hris.suffixes],
   );
 
   const nationalityData = useMemo(
@@ -141,7 +141,7 @@ const PatientsProfileModal = ({
         label: n.nationality,
         value: n.nationality,
       })) ?? [],
-    [hris.nationalities]
+    [hris.nationalities],
   );
 
   const bloodTypeData = useMemo(
@@ -150,7 +150,7 @@ const PatientsProfileModal = ({
         label: b.blood_type,
         value: b.blood_type,
       })) ?? [],
-    [haw.bloodTypes]
+    [haw.bloodTypes],
   );
 
   const idTypeOptions = useMemo(
@@ -159,7 +159,7 @@ const PatientsProfileModal = ({
         label: id.id_type,
         value: id.id,
       })) ?? [],
-    [hris.idTypes]
+    [hris.idTypes],
   );
 
   const regionData = useMemo(
@@ -168,7 +168,7 @@ const PatientsProfileModal = ({
         label: r.region,
         value: r.id, // ✅ ID
       })) ?? [],
-    [gis.regions]
+    [gis.regions],
   );
 
   const provinceData = useMemo(
@@ -178,7 +178,7 @@ const PatientsProfileModal = ({
         value: p.id, // ✅ ID
         regionId: p.region_id,
       })) ?? [],
-    [gis.province]
+    [gis.province],
   );
 
   const municipalityData = useMemo(
@@ -189,7 +189,7 @@ const PatientsProfileModal = ({
         provinceId: m.province_id,
         regionId: m.region_id,
       })) ?? [],
-    [gis.municipality]
+    [gis.municipality],
   );
 
   const barangayData = useMemo(
@@ -201,7 +201,7 @@ const PatientsProfileModal = ({
         provinceId: b.province_id,
         regionId: b.region_id,
       })) ?? [],
-    [gis.barangay]
+    [gis.barangay],
   );
 
   const subdivisionData = useMemo(
@@ -211,7 +211,7 @@ const PatientsProfileModal = ({
         value: s.id, // ✅ ID
         barangayId: s.barangay_id,
       })) ?? [],
-    [gis.subdivision]
+    [gis.subdivision],
   );
 
   const streetData = useMemo(
@@ -221,7 +221,7 @@ const PatientsProfileModal = ({
         value: st.id, // ✅ ID
         subdivisionId: st.subdivision_id,
       })) ?? [],
-    [gis.street]
+    [gis.street],
   );
 
   // same pattern for municipality, barangay, subdivision, street
@@ -269,14 +269,14 @@ const PatientsProfileModal = ({
       await waitForImages(a4FrontRef.current);
       await exportA4ToJpg(
         a4FrontRef,
-        `${newResident.alagangValmocinaID}-FRONT-A4.jpg`
+        `${newResident.alagangValmocinaID}-FRONT-A4.jpg`,
       );
 
       // BACK
       await waitForImages(a4BackRef.current);
       await exportA4ToJpg(
         a4BackRef,
-        `${newResident.alagangValmocinaID}-BACK-A4.jpg`
+        `${newResident.alagangValmocinaID}-BACK-A4.jpg`,
       );
 
       alert("Front and Back IDs generated successfully!");
@@ -296,13 +296,13 @@ const PatientsProfileModal = ({
         ? mapExistingNonResidentToForm(existingResident)
         : mapExistingResidentToForm(existingResident)
       : isNonResident
-      ? makeEmptyNonResident(generateBarangayResidentId())
-      : makeEmptyResident(generateBarangayResidentId())
+        ? makeEmptyNonResident(generateBarangayResidentId())
+        : makeEmptyResident(generateBarangayResidentId()),
   );
 
   const [identificationCards, dispatchIdCards] = useReducer(
     identificationCardsReducer,
-    idCardsInitialState
+    idCardsInitialState,
   );
 
   const resetReviewState = () => {
@@ -410,6 +410,7 @@ const PatientsProfileModal = ({
     handleStreetChange,
   } = useCascadingAddress({
     resident: newResident,
+    recordType, // 🔥 PASS IT HERE
     regionData,
     provinceData,
     municipalityData,
@@ -448,8 +449,8 @@ const PatientsProfileModal = ({
         ? mapExistingNonResidentToForm(existingResident)
         : mapExistingResidentToForm(existingResident)
       : isNonResident
-      ? makeEmptyNonResident(generateBarangayResidentId())
-      : makeEmptyResident(generateBarangayResidentId());
+        ? makeEmptyNonResident(generateBarangayResidentId())
+        : makeEmptyResident(generateBarangayResidentId());
 
     dispatchResident({
       type: RESIDENT_ACTIONS.RESET,
@@ -577,13 +578,13 @@ const PatientsProfileModal = ({
       province: getLabelById(provinceData, newResident.provinceId),
       cityMunicipality: getLabelById(
         municipalityData,
-        newResident.municipalityId
+        newResident.municipalityId,
       ),
       barangay: getLabelById(barangayData, newResident.barangayId),
 
       subdivisionVillage: getLabelById(
         subdivisionData,
-        newResident.subdivisionId
+        newResident.subdivisionId,
       ),
       streetRoad: getLabelById(streetData, newResident.streetId),
 
@@ -821,21 +822,21 @@ const PatientsProfileModal = ({
                         ? isNonResident
                           ? "Update Non-Resident Record"
                           : isDistrict2
-                          ? "Update District 2 Resident Record"
-                          : "Update Resident Record"
+                            ? "Update District 2 Resident Record"
+                            : "Update Resident Record"
                         : isNonResident
-                        ? "Add Non-Resident Record"
-                        : isDistrict2
-                        ? "Add District 2 Resident Record"
-                        : "Add Resident Record"}
+                          ? "Add Non-Resident Record"
+                          : isDistrict2
+                            ? "Add District 2 Resident Record"
+                            : "Add Resident Record"}
                     </h2>
 
                     <p className="text-xs text-gray-500">
                       {isNonResident
                         ? "Create a new non-resident profile"
                         : isDistrict2
-                        ? "Create a new District 2 health & wellness resident profile"
-                        : "Create a new health & wellness resident profile"}
+                          ? "Create a new District 2 health & wellness resident profile"
+                          : "Create a new health & wellness resident profile"}
                     </p>
                   </div>
                 </div>
@@ -896,7 +897,7 @@ const PatientsProfileModal = ({
                   regionData={regionData}
                   provinceOptions={filteredProvinces}
                   municipalityOptions={filteredMunicipalities}
-                  barangayOptions={filteredBarangays} // ✅ ADD
+                  barangayOptions={filteredBarangays}
                   handleRegionChange={handleRegionChange}
                   handleProvinceChange={handleProvinceChange}
                   handleMunicipalityChange={handleMunicipalityChange}
@@ -908,7 +909,7 @@ const PatientsProfileModal = ({
                   resident={newResident}
                   errors={errors}
                   handleBlur={handleBlur}
-                  regionData={filteredRegions}
+                  regionData={regionData}
                   provinceOptions={filteredProvinces}
                   municipalityOptions={filteredMunicipalities}
                   barangayOptions={filteredBarangays}
@@ -967,12 +968,12 @@ const PatientsProfileModal = ({
                     {isSaving
                       ? "Saving..."
                       : isEditMode
-                      ? isDistrict2
-                        ? "Update District 2 Resident Record"
-                        : "Update Resident Record"
-                      : isDistrict2
-                      ? "Add District 2 Resident Record"
-                      : "Add Resident Record"}
+                        ? isDistrict2
+                          ? "Update District 2 Resident Record"
+                          : "Update Resident Record"
+                        : isDistrict2
+                          ? "Add District 2 Resident Record"
+                          : "Add Resident Record"}
                   </button>
                 </div>
               </div>

@@ -193,21 +193,30 @@ const PatientsProfile = () => {
       // 🔥 Normalize data
       const normalizedResidents = rawResidents.map((r) => ({
         ...r,
+
+        // ID
         alagangValmocinaID: r.alagang_valmocina_id,
+
+        // Name
         firstName: r.first_name,
         middleName: r.middle_name,
         lastName: r.last_name,
+
+        // Contact
         contactNumber: r.contact_number,
+        emergencyContactFullName: r.emergency_contact_full_name,
+        emergencyContactNumber: r.emergency_contact_number,
+
+        // Birth
         birthDate: r.birthdate,
       }));
 
       // 🖼️ BUILD AVATAR MAP
+      // 🖼️ BUILD AVATAR MAP (FIXED)
       const avatarMap = {};
       rawResidents.forEach((r) => {
         if (r.img_url) {
-          avatarMap[r.id] = r.img_url;
-          // ⚠️ If img_url is BASE64 → already fine
-          // ⚠️ If img_url is path → must be publicly accessible
+          avatarMap[r.id] = `/media/resident-photo/${r.id}`;
         }
       });
       setBulkAvatarMap(avatarMap);
@@ -221,16 +230,20 @@ const PatientsProfile = () => {
 
       for (let i = 0; i < batches.length; i++) {
         setBulkResidents(batches[i]);
+
+        // ⏳ wait for BOTH canvases
         await waitForStableRef(bulkFrontRef);
+        await waitForStableRef(bulkBackRef);
+
         await waitForImages(bulkFrontRef.current);
+        await waitForImages(bulkBackRef.current);
+
+        console.log("GENERATING BATCH", i + 1, "COUNT:", batches[i].length);
 
         await generateResidentA4({
           frontRef: bulkFrontRef,
           backRef: bulkBackRef,
-          resident: batches[i][0],
-          index: i,
           batchName: `ALAGANG_VALMOCINA_BATCH_${i + 1}`,
-          avatarMap, // ✅ PASS HERE
         });
       }
 

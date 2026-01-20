@@ -70,6 +70,10 @@ router.post("/:id/photo", upload.single("photo"), async (req, res) => {
         Key: key,
         Body: optimizedBuffer,
         ContentType: "image/jpeg",
+
+        // 🔑 REQUIRED FOR CORS + CANVAS EXPORT
+        CacheControl: "public, max-age=31536000",
+        MetadataDirective: "REPLACE",
       })
       .promise();
 

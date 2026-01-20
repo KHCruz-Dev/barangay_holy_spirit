@@ -37,10 +37,8 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="Region"
           options={regionData}
-          value={resident.regionId}
+          value={regionData.find((r) => r.value === resident.regionId) ?? null}
           requireMatch
-          isInvalid={!!errors.regionId}
-          errorMessage={errors.regionId}
           onChange={handleRegionChange}
         />
 
@@ -48,7 +46,9 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="Province"
           options={provinceOptions}
-          value={resident.provinceId}
+          value={
+            provinceOptions.find((p) => p.value === resident.provinceId) ?? null
+          }
           requireMatch
           disabled={!hasRegion}
           onChange={handleProvinceChange}
@@ -58,7 +58,11 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="City / Municipality"
           options={municipalityOptions}
-          value={resident.municipalityId}
+          value={
+            municipalityOptions.find(
+              (m) => m.value === resident.municipalityId,
+            ) ?? null
+          }
           requireMatch
           disabled={!hasProvince}
           onChange={handleMunicipalityChange}
@@ -68,9 +72,11 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="Barangay"
           options={barangayOptions}
-          value={resident.barangayId}
-          requireMatch
-          disabled={!hasMunicipality}
+          value={
+            barangayOptions.find((b) => b.value === resident.barangayId) ?? null
+          }
+          disabled={false} // ✅ ALWAYS ENABLED
+          requireMatch={false}
           onChange={handleBarangayChange}
         />
 

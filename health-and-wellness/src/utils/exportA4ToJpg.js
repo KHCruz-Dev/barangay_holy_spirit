@@ -1,3 +1,4 @@
+import { waitForImages } from "./waitForImages";
 // utils/exportA4ToJpg.js
 import { toBlob } from "html-to-image";
 
@@ -5,6 +6,7 @@ export async function exportA4ToJpg(a4Ref, filename) {
   if (!a4Ref?.current) {
     throw new Error("A4 canvas not mounted");
   }
+  console.log("EXPORTING:", filename);
 
   await waitForImages(a4Ref.current);
 

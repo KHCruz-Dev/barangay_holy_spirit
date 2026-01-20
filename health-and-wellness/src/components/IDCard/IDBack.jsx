@@ -1,16 +1,32 @@
-import React from "react";
-import QRCode from "react-qr-code";
+import React, { useEffect, useRef } from "react";
+import QRCode from "qrcode";
 
 const IDBack = React.forwardRef(({ resident }, ref) => {
-  const qrValue = resident?.alagang_valmocina_id ?? "";
+  const canvasRef = useRef(null);
+
+  const qrValue = resident?.alagangValmocinaID ?? "";
+
+  const safe = (v) =>
+    v !== undefined && v !== null && String(v).trim() !== ""
+      ? String(v)
+      : "N/A";
+
+  // ✅ Render QR into CANVAS (not SVG)
+  useEffect(() => {
+    if (qrValue && canvasRef.current) {
+      QRCode.toCanvas(canvasRef.current, qrValue, {
+        width: 385,
+        margin: 0,
+        errorCorrectionLevel: "H",
+      });
+    }
+  }, [qrValue]);
+
   return (
     <div
       ref={ref}
       className="relative bg-white overflow-hidden"
-      style={{
-        width: "1011px",
-        height: "639px",
-      }}
+      style={{ width: "1011px", height: "639px" }}
     >
       {/* Background */}
       <img
@@ -19,50 +35,42 @@ const IDBack = React.forwardRef(({ resident }, ref) => {
         crossOrigin="anonymous"
       />
 
-      {/* QR Code – EXACT MATCH TO TEMPLATE */}
-      <div
-        className="absolute overflow-hidden rounded-md bg-white"
+      {/* ✅ QR CODE (CANVAS — EXPORT SAFE) */}
+      <canvas
+        ref={canvasRef}
+        width={385}
+        height={385}
+        className="absolute bg-white rounded-md"
         style={{
-          left: "600px", // ← measured from back.jpg
-          top: "160px", // ← measured from back.jpg
-          width: "385px", // ← measured
-          height: "385px", // ← measured
+          left: "600px",
+          top: "160px",
         }}
-      >
-        <div style={{ background: "white" }}>
-          {qrValue && (
-            <QRCode
-              value={qrValue}
-              style={{ width: "100%", height: "100%" }}
-              size={385}
-            />
-          )}
-        </div>
-      </div>
+      />
 
-      {/* Emergency Contact */}
-
+      {/* Emergency Contact Header */}
       <div className="absolute left-[50px] top-[150px]">
         <p className="m-0 text-[20px] font-bold text-black uppercase">
           IN CASE OF EMERGENCY, PLEASE CONTACT:
         </p>
       </div>
 
+      {/* Emergency Contact Name */}
       <div className="absolute left-[50px] top-[190px]">
-        <p className="m-0 text-[18px] font-normal text-black leading-none">
+        <p className="m-0 text-[18px] text-black leading-none">
           Emergency Contact Name:
         </p>
-        <p className="text-[20px] font-bold text-black">
-          {resident.emergencyContactFullName}
+        <p className="m-0 text-[20px] font-bold text-black">
+          {safe(resident.emergencyContactFullName)}
         </p>
       </div>
 
+      {/* Emergency Contact Number */}
       <div className="absolute left-[50px] top-[250px]">
-        <p className="m-0 text-[18px] font-normal text-black leading-none">
+        <p className="m-0 text-[18px] text-black leading-none">
           Emergency Contact Number:
         </p>
         <p className="m-0 text-[20px] font-bold text-black">
-          {resident.emergencyContactNumber}
+          {safe(resident.emergencyContactNumber)}
         </p>
       </div>
     </div>

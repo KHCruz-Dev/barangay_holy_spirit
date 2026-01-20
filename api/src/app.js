@@ -28,6 +28,7 @@ const gisMunicipalityRouter = require("./routes/gisMunicipalityRoutes");
 const gisBarangayRouter = require("./routes/gisBarangayRoutes");
 const gisSubdivisionRouter = require("./routes/gisSubdivisionRoutes");
 const gisStreetsRouter = require("./routes/gisStreetsRoutes");
+const mediaProxyRouter = require("./routes/mediaProxy");
 
 // Accounts
 const authRoutes = require("./routes/accountRoutes");
@@ -119,6 +120,8 @@ app.use("/api/dashboard", dashboardSummaryRoutes);
 
 // Accounts
 app.use("/api/auth", authRoutes);
+
+app.use("/media", mediaProxyRouter);
 
 // JWT Tokens
 

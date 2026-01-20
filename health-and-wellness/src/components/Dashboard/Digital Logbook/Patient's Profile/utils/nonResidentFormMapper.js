@@ -30,12 +30,13 @@ export const makeEmptyNonResident = (alagangId) => ({
   prcID: "",
   driversLicense: "",
 
-  // GIS (same UI keys)
-  region: "",
-  province: "",
-  cityMunicipality: "",
+  // ✅ USE GIS IDS (SAME AS RESIDENT)
+  regionId: undefined,
+  provinceId: undefined,
+  municipalityId: undefined,
+  barangayId: undefined,
 
-  // ✅ Non-resident single line text address
+  // Non-resident address line
   streetAddressLine: "",
 
   isVoter: false,
@@ -66,14 +67,12 @@ export const mapExistingNonResidentToForm = (apiResident) => {
     firstName: apiResident.first_name || "",
     middleName: apiResident.middle_name || "",
     lastName: apiResident.last_name || "",
-    prefix: apiResident.prefix?.trim() || "",
-    suffix: apiResident.suffix?.trim() || "",
 
     birthDate: apiResident.birthdate
       ? String(apiResident.birthdate).slice(0, 10)
       : "",
-    age: age.toString(),
 
+    age: age.toString(),
     gender: apiResident.gender || "",
     civilStatus: apiResident.civil_status || "",
     nationality: apiResident.nationality || "",
@@ -87,11 +86,11 @@ export const mapExistingNonResidentToForm = (apiResident) => {
 
     alagangValmocinaID: apiResident.alagang_valmocina_id,
 
-    // 🌍 GIS
-    region: apiResident.gis_region_name || "",
-    province: apiResident.gis_province_name || "",
-    cityMunicipality: apiResident.gis_municipality_name || "",
-    barangay: apiResident.gis_barangay_name || "",
+    // ✅ GIS IDS (THIS FIXES THE BUG)
+    regionId: apiResident.gis_region_id ?? undefined,
+    provinceId: apiResident.gis_province_id ?? undefined,
+    municipalityId: apiResident.gis_municipality_id ?? undefined,
+    barangayId: apiResident.gis_barangay_id ?? undefined,
 
     streetAddressLine: apiResident.street_address_line || "",
 
