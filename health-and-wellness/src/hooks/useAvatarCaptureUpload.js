@@ -14,11 +14,18 @@ export function useAvatarCaptureUpload(initialImage = DefaultAvatar) {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  /* ===========================
+     🔥 CACHE-BUST EXISTING IMAGE
+  =========================== */
   useEffect(() => {
-    if (initialImage) {
-      setAvatarPreview(initialImage);
-      setAvatarFile(null);
+    if (initialImage && initialImage !== DefaultAvatar) {
+      // 🔥 force refetch from S3
+      setAvatarPreview(`${initialImage}?v=${Date.now()}`);
+    } else {
+      setAvatarPreview(DefaultAvatar);
     }
+
+    setAvatarFile(null);
   }, [initialImage]);
 
   /* ===========================
@@ -48,10 +55,9 @@ export function useAvatarCaptureUpload(initialImage = DefaultAvatar) {
 
     setVideoDevices(cameras);
 
-    // Prefer external camera if available
     const preferred =
       cameras.find((c) =>
-        /usb|external|logitech|brio|dslr|cam/i.test(c.label)
+        /usb|external|logitech|brio|dslr|cam/i.test(c.label),
       ) || cameras[0];
 
     if (preferred) setSelectedDeviceId(preferred.deviceId);
@@ -93,14 +99,12 @@ export function useAvatarCaptureUpload(initialImage = DefaultAvatar) {
   }, [isCameraOpen]);
 
   /* ===========================
-     SWITCH CAMERA (LIVE)
+     SWITCH CAMERA
   =========================== */
   const switchCamera = async (deviceId) => {
     setSelectedDeviceId(deviceId);
 
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-    }
+    streamRef.current?.getTracks().forEach((t) => t.stop());
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { deviceId: { exact: deviceId } },
@@ -136,11 +140,11 @@ export function useAvatarCaptureUpload(initialImage = DefaultAvatar) {
         setAvatarFile(
           new File([blob], "captured.jpg", {
             type: "image/jpeg",
-          })
+          }),
         );
       },
       "image/jpeg",
-      0.98 // 🔥 HIGH QUALITY
+      0.98,
     );
 
     closeCamera();
@@ -157,7 +161,7 @@ export function useAvatarCaptureUpload(initialImage = DefaultAvatar) {
 
   const resetAvatar = () => {
     closeCamera();
-    setAvatarPreview(initialImage);
+    setAvatarPreview(DefaultAvatar);
     setAvatarFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };

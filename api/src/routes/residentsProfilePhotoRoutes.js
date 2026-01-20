@@ -3,12 +3,15 @@ const multer = require("multer");
 const sharp = require("sharp");
 const s3 = require("../config/s3");
 
+const { requireAuth } = require("../middleware/authMiddleware");
+
 const {
   getResidentsProfileById,
   saveResidentPhoto,
 } = require("../models/residentProfileModel");
 
 const router = express.Router();
+router.use(requireAuth);
 
 /* ============================
    MULTER (MEMORY BUFFER)
@@ -71,9 +74,13 @@ router.post("/:id/photo", upload.single("photo"), async (req, res) => {
         Body: optimizedBuffer,
         ContentType: "image/jpeg",
 
-        // 🔑 REQUIRED FOR CORS + CANVAS EXPORT
+        // ✅ THESE ARE VALID
         CacheControl: "public, max-age=31536000",
-        MetadataDirective: "REPLACE",
+
+        // OPTIONAL: if you really need metadata
+        Metadata: {
+          uploadedBy: String(id),
+        },
       })
       .promise();
 

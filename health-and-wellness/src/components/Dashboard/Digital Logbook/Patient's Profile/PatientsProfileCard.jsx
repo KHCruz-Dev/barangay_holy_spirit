@@ -36,15 +36,23 @@ const getBackendBaseUrl = () => {
 
 const resolveAvatarSrc = (resident) => {
   const fallback = getDefaultAvatarForResident(resident);
+
+  // raw image url from backend (S3 or relative)
   const raw = resident.img_url;
 
   if (!raw || typeof raw !== "string") return fallback;
-  if (raw.startsWith("http")) return raw;
 
+  // 🔥 cache-bust so updated images refetch
+  const withCacheBust = `${raw}?v=${Date.now()}`;
+
+  // absolute S3 / http url
+  if (raw.startsWith("http")) return withCacheBust;
+
+  // relative path → prefix backend base
   const base = getBackendBaseUrl();
   if (!base) return fallback;
 
-  return `${base}${raw.startsWith("/") ? raw : `/${raw}`}`;
+  return `${base}${raw.startsWith("/") ? raw : `/${raw}`}?v=${Date.now()}`;
 };
 
 /* =========================

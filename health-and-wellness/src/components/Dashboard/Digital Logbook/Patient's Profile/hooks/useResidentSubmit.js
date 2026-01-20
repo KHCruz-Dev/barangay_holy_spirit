@@ -84,14 +84,15 @@ export function useResidentSubmit({
       /* ===============================
          UPLOAD AVATAR (OPTIONAL)
       =============================== */
+
       if (avatarFile && residentId) {
-        const photoForm = new FormData();
-        photoForm.append("photo", avatarFile);
+        const formData = new FormData();
+        formData.append("photo", avatarFile); // 🔥 MUST BE "photo"
 
         await fetch(`${baseUrl}/${residentId}/photo`, {
           method: "POST",
           credentials: "include",
-          body: photoForm,
+          body: formData,
         });
       }
 
@@ -101,7 +102,7 @@ export function useResidentSubmit({
       alert(
         isEditMode
           ? "Resident record has been updated."
-          : "Resident record has been created."
+          : "Resident record has been created.",
       );
 
       /* ===============================
