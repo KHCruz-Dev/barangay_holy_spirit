@@ -35,17 +35,16 @@ export function useCascadingAddress({
   }, [municipalityData, resident?.provinceId]);
 
   const filteredBarangays = useMemo(() => {
-    // ✅ NON-RESIDENT → ALL BARANGAYS (NO MUNICIPALITY FILTER)
-    if (recordType === "NON_RESIDENT") {
-      return barangayData;
-    }
-
-    // ⛔ Residents REQUIRE municipality
     if (!resident?.municipalityId) return [];
 
     const byMunicipality = barangayData.filter(
       (b) => b.municipalityId === resident.municipalityId,
     );
+
+    // ✅ NON-RESIDENT → ALL barangays
+    if (recordType === "NON_RESIDENT") {
+      return byMunicipality;
+    }
 
     // DEFAULT → Holy Spirit only
     if (recordSubType === "DEFAULT") {
@@ -64,7 +63,12 @@ export function useCascadingAddress({
     }
 
     return [];
-  }, [barangayData, resident?.municipalityId, recordSubType, recordType]);
+  }, [
+    barangayData,
+    resident?.municipalityId,
+    recordSubType,
+    recordType, // ✅ IMPORTANT
+  ]);
 
   const filteredSubdivisions = useMemo(() => {
     if (!resident?.barangayId) return [];
@@ -107,9 +111,9 @@ export function useCascadingAddress({
     filteredSubdivisions,
     filteredStreets,
 
-    handleRegionChange: (option) =>
+    handleRegionChange: (id) =>
       set({
-        regionId: option?.value ?? undefined,
+        regionId: id,
         provinceId: undefined,
         municipalityId: undefined,
         barangayId: undefined,
@@ -117,39 +121,39 @@ export function useCascadingAddress({
         streetId: undefined,
       }),
 
-    handleProvinceChange: (option) =>
+    handleProvinceChange: (id) =>
       set({
-        provinceId: option?.value ?? undefined,
+        provinceId: id,
         municipalityId: undefined,
         barangayId: undefined,
         subdivisionId: undefined,
         streetId: undefined,
       }),
 
-    handleMunicipalityChange: (option) =>
+    handleMunicipalityChange: (id) =>
       set({
-        municipalityId: option?.value ?? undefined,
+        municipalityId: id,
         barangayId: undefined,
         subdivisionId: undefined,
         streetId: undefined,
       }),
 
-    handleBarangayChange: (option) =>
+    handleBarangayChange: (id) =>
       set({
-        barangayId: option?.value ?? undefined,
+        barangayId: id,
         subdivisionId: undefined,
         streetId: undefined,
       }),
 
-    handleSubdivisionChange: (option) =>
+    handleSubdivisionChange: (id) =>
       set({
-        subdivisionId: option?.value ?? undefined,
+        subdivisionId: id,
         streetId: undefined,
       }),
 
-    handleStreetChange: (option) =>
+    handleStreetChange: (id) =>
       set({
-        streetId: option?.value ?? undefined,
+        streetId: id,
       }),
   };
 }
