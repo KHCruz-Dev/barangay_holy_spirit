@@ -19,7 +19,6 @@ const NonResidentAddressSection = ({
 
   updateResident,
 }) => {
-  // ✅ USE ID FIELDS — SAME AS RESIDENT
   const hasRegion = !!resident.regionId;
   const hasProvince = !!resident.provinceId;
   const hasMunicipality = !!resident.municipalityId;
@@ -33,12 +32,14 @@ const NonResidentAddressSection = ({
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Region (ALWAYS ENABLED) */}
+        {/* Region */}
         <ComboBoxFloatingLabel
           label="Region"
           options={regionData}
-          value={regionData.find((r) => r.value === resident.regionId) ?? null}
+          value={resident.regionId}
           requireMatch
+          isInvalid={!!errors.regionId}
+          errorMessage={errors.regionId}
           onChange={handleRegionChange}
         />
 
@@ -46,9 +47,7 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="Province"
           options={provinceOptions}
-          value={
-            provinceOptions.find((p) => p.value === resident.provinceId) ?? null
-          }
+          value={resident.provinceId}
           requireMatch
           disabled={!hasRegion}
           onChange={handleProvinceChange}
@@ -58,11 +57,7 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="City / Municipality"
           options={municipalityOptions}
-          value={
-            municipalityOptions.find(
-              (m) => m.value === resident.municipalityId,
-            ) ?? null
-          }
+          value={resident.municipalityId}
           requireMatch
           disabled={!hasProvince}
           onChange={handleMunicipalityChange}
@@ -72,11 +67,9 @@ const NonResidentAddressSection = ({
         <ComboBoxFloatingLabel
           label="Barangay"
           options={barangayOptions}
-          value={
-            barangayOptions.find((b) => b.value === resident.barangayId) ?? null
-          }
-          disabled={false} // ✅ ALWAYS ENABLED
-          requireMatch={false}
+          value={resident.barangayId}
+          requireMatch
+          disabled={!hasMunicipality}
           onChange={handleBarangayChange}
         />
 
