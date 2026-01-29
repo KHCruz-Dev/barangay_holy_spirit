@@ -305,6 +305,16 @@ const PatientsProfileModal = ({
     idCardsInitialState,
   );
 
+  const displayIdentificationCards = useMemo(() => {
+    // CREATE MODE → show 1 blank card
+    if (!isEditMode && identificationCards.length === 0) {
+      return [{ idTypeId: null, idNumber: "" }];
+    }
+
+    // EDIT MODE with existing IDs → show ONLY existing IDs
+    return identificationCards;
+  }, [isEditMode, identificationCards]);
+
   const resetReviewState = () => {
     setIsReviewOpen(false);
     setResidentForReview(null);
@@ -462,6 +472,18 @@ const PatientsProfileModal = ({
     });
 
     dispatchIdCards({ type: ID_CARDS_ACTIONS.RESET });
+
+    if (existingResident?.identificationCards?.length) {
+      existingResident.identificationCards.forEach((card) => {
+        dispatchIdCards({
+          type: ID_CARDS_ACTIONS.ADD,
+          payload: {
+            idTypeId: card.idTypeId,
+            idNumber: card.idNumber,
+          },
+        });
+      });
+    }
 
     setResidentForReview(null);
     resetValidation();

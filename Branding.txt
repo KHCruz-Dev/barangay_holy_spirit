@@ -1,4 +1,4 @@
 ssh -i barangay-holyspirit-key.pem ubuntu@13.228.170.94
 sudo systemctl reload nginx
-pm2 logs barangay-holy-spirit-api --lines 200
+pm2 logs barangay-holy-spirit-api --lines 500
 

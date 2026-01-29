@@ -122,7 +122,7 @@ async function getResidentsPage(limit, offset) {
     ORDER BY rp.date_created DESC
     LIMIT $1 OFFSET $2;
     `,
-    [limit, offset]
+    [limit, offset],
   );
 
   return result.rows;
@@ -169,7 +169,7 @@ async function getResidentById(id) {
     LEFT JOIN gis_streets       gst ON rp.gis_streets_id      = gst.id
     WHERE rp.id = $1;
     `,
-    [id]
+    [id],
   );
 
   return result.rows[0];
@@ -195,7 +195,7 @@ async function getResidentIdsByResidentId(residentId) {
       END,
       ri.id ASC;
     `,
-    [residentId]
+    [residentId],
   );
 
   return result.rows;
@@ -205,7 +205,7 @@ async function getResidentIdsByResidentId(residentId) {
 async function getResidentsProfileById(id) {
   const result = await pool.query(
     "SELECT * FROM residents_profile WHERE id = $1",
-    [id]
+    [id],
   );
   return result.rows[0];
 }
@@ -317,7 +317,7 @@ async function createResidentsProfile(data, createdBy, client = pool) {
       gis_streets_id,
       gis_street_number,
       createdBy, // 🔥 FROM JWT
-    ]
+    ],
   );
 
   return result.rows[0];
@@ -352,7 +352,7 @@ async function createResidentIds(residentId, idCards = [], client = pool) {
 async function replaceResidentIds(residentId, idCards = [], client = pool) {
   await client.query(
     "DELETE FROM resident_id WHERE residents_profile_id = $1",
-    [residentId]
+    [residentId],
   );
 
   if (!idCards.length) return [];
@@ -462,7 +462,7 @@ async function updateResidentsProfile(id, data, updatedBy, client = pool) {
 
       updatedBy, // ✅ from controller
       id,
-    ]
+    ],
   );
 
   return result.rows[0];
@@ -478,7 +478,7 @@ async function saveResidentPhoto(id, { img_url, img_mime }) {
     WHERE id = $3
     RETURNING *;
     `,
-    [img_url, img_mime, id]
+    [img_url, img_mime, id],
   );
 
   return result.rows[0];
@@ -494,7 +494,7 @@ async function disableResidentsProfile(id) {
     WHERE id = $1
     RETURNING *;
     `,
-    [id]
+    [id],
   );
 
   return result.rows[0];
@@ -504,7 +504,7 @@ async function disableResidentsProfile(id) {
 async function deleteResidentsProfile(id) {
   const result = await pool.query(
     "DELETE FROM residents_profile WHERE id = $1 RETURNING *",
-    [id]
+    [id],
   );
   return result.rows[0];
 }
@@ -738,7 +738,7 @@ async function updateResidentIdStatus(id, status, updatedBy) {
     WHERE id = $3
     RETURNING *;
     `,
-    [status, updatedBy, id]
+    [status, updatedBy, id],
   );
 
   return result.rows[0];
@@ -755,7 +755,7 @@ async function bulkUpdateResidentIdStatus(ids, status, updatedBy) {
     WHERE id = ANY($3::uuid[])
     RETURNING id;
     `,
-    [status, updatedBy, ids]
+    [status, updatedBy, ids],
   );
 
   return result.rows;
@@ -819,7 +819,7 @@ async function getResidentsByIds(ids) {
     WHERE rp.id = ANY($1::uuid[])
     ORDER BY rp.last_name ASC
     `,
-    [ids]
+    [ids],
   );
 
   return result.rows;

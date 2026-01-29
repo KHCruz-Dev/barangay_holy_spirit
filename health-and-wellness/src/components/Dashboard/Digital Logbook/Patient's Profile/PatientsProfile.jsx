@@ -150,7 +150,7 @@ const PatientsProfile = () => {
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -216,7 +216,7 @@ const PatientsProfile = () => {
       const avatarMap = {};
       rawResidents.forEach((r) => {
         if (r.img_url) {
-          avatarMap[r.id] = `/media/resident-photo/${r.id}`;
+          avatarMap[r.id] = `/media/residents_profile/${r.id}`;
         }
       });
       setBulkAvatarMap(avatarMap);
@@ -281,7 +281,7 @@ const PatientsProfile = () => {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/dashboard/summary`,
-          { credentials: "include" }
+          { credentials: "include" },
         );
 
         if (!res.ok) return;
@@ -403,7 +403,7 @@ const PatientsProfile = () => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/residentsProfile/id-status-counts`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       if (!res.ok) return;

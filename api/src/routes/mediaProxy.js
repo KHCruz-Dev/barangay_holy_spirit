@@ -3,11 +3,24 @@ const axios = require("axios");
 
 const router = express.Router();
 
-router.get("/resident-photo/:id", async (req, res) => {
+router.get("/media/:folder/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { folder, id } = req.params;
 
-    const s3Url = `https://barangayholyspirit-media.s3.ap-southeast-1.amazonaws.com/residents_profile/${id}.jpg`;
+    // allow only known folders (security)
+    const allowedFolders = [
+      "residents_profile",
+      "non_residents_profile",
+      "accounts",
+      "assets",
+      "health_and_wellness",
+    ];
+
+    if (!allowedFolders.includes(folder)) {
+      return res.status(400).end();
+    }
+
+    const s3Url = `https://barangayholyspirit-media.s3.ap-southeast-1.amazonaws.com/${folder}/${id}.jpg`;
 
     const response = await axios.get(s3Url, {
       responseType: "arraybuffer",

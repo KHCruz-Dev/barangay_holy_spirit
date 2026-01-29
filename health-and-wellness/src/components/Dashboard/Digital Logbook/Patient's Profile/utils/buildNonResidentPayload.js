@@ -13,13 +13,13 @@ export function buildNonResidentPayload({
 }) {
   const selectedRegion = regionData.find((r) => r.value === resident.region);
   const selectedProvince = provinceData.find(
-    (p) => p.value === resident.province
+    (p) => p.value === resident.province,
   );
   const selectedMunicipality = municipalityData.find(
-    (m) => m.value === resident.cityMunicipality
+    (m) => m.value === resident.cityMunicipality,
   );
   const selectedBarangay = barangayData.find(
-    (b) => b.value === resident.barangay
+    (b) => b.value === resident.barangay,
   );
 
   const streetAddressLine = (resident.streetAddressLine || "").trim();
@@ -51,10 +51,10 @@ export function buildNonResidentPayload({
 
     alagang_valmocina_id: resident.alagangValmocinaID,
 
-    gis_region_id: selectedRegion?.regionId,
-    gis_province_id: selectedProvince?.provinceId,
-    gis_municipality_id: selectedMunicipality?.municipalityId,
-    gis_barangay_id: selectedBarangay?.barangayId, // ✅ REQUIRED
+    gis_region_id: resident.regionId,
+    gis_province_id: resident.provinceId,
+    gis_municipality_id: resident.municipalityId,
+    gis_barangay_id: resident.barangayId,
 
     // ✅ REQUIRED
     street_address_line: streetAddressLine,

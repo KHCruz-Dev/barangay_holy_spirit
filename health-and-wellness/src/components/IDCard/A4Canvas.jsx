@@ -6,11 +6,17 @@ const A4Canvas = forwardRef(({ children }, ref) => {
     <div
       ref={ref}
       style={{
-        width: "2480px", // A4 portrait
-        height: "3508px",
+        width: "4724px",
+        height: "3425px",
         backgroundColor: "#ffffff",
         position: "relative",
         overflow: "hidden",
+
+        /* 🔒 PRINT-SAFE FIXES */
+        transform: "scale(1)",
+        transformOrigin: "top left",
+        imageRendering: "crisp-edges",
+        WebkitFontSmoothing: "antialiased",
       }}
     >
       {children}

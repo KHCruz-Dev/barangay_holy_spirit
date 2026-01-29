@@ -83,6 +83,7 @@ async function getSingleResidentsProfileHandler(req, res) {
       ...residentsProfile,
       identificationCards: identificationCards.map((row) => ({
         idTypeId: row.hris_id_types_id,
+        idTypeLabel: row.id_type, // 🔥 FIX
         idNumber: row.id_number,
       })),
     });
@@ -157,7 +158,7 @@ async function createResidentsProfileHandler(req, res) {
     const profile = await createResidentsProfile(
       data,
       req.user.sub, // ✅ logged-in user ID
-      client
+      client,
     );
 
     // 2️⃣ Create resident_id rows (if any)
@@ -167,7 +168,7 @@ async function createResidentsProfileHandler(req, res) {
       await createResidentIds(
         profile.id,
         identificationCards.filter((c) => c.idTypeId && c.idNumber),
-        client // ✅ PASS CLIENT
+        client, // ✅ PASS CLIENT
       );
     }
 
@@ -279,7 +280,7 @@ async function updateResidentsProfileHandler(req, res) {
       id,
       merged,
       req.user.sub, // 🔥 logged-in user
-      client
+      client,
     );
 
     // 2️⃣ Replace resident IDs (if provided)
@@ -287,7 +288,7 @@ async function updateResidentsProfileHandler(req, res) {
       await replaceResidentIds(
         id,
         incoming.identificationCards.filter((c) => c.idTypeId && c.idNumber),
-        client
+        client,
       );
     }
 
@@ -424,7 +425,7 @@ async function bulkUpdateResidentIdStatusHandler(req, res) {
     const updated = await bulkUpdateResidentIdStatus(
       residentIds,
       status,
-      req.user.sub
+      req.user.sub,
     );
 
     res.json({
