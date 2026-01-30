@@ -79,7 +79,12 @@ export function useResidentSubmit({
       }
 
       const saved = await response.json();
-      const residentId = isEditMode ? existingResident.id : saved.id;
+      const residentId = isEditMode
+        ? existingResident.id
+        : saved?.id ||
+          saved?.nonResident?.id ||
+          saved?.nonResidentsProfile?.id ||
+          saved?.data?.id;
 
       /* ===============================
          UPLOAD AVATAR (OPTIONAL)
