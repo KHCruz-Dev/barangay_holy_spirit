@@ -52,7 +52,7 @@ const allowedOrigins = [
 //     origin: "http://localhost:5173", // 👈 FRONTEND ORIGIN
 //     credentials: true, // 👈 ALLOW COOKIES
 //     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
+//     allowedHeaders: [ "Content-Type", "Authorization", "X-Requested-With",],
 //   })
 // );
 
@@ -71,8 +71,8 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  }),
 );
 
 app.use(cookieParser());

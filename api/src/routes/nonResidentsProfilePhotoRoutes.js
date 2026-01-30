@@ -3,12 +3,15 @@ const multer = require("multer");
 const sharp = require("sharp");
 const s3 = require("../config/s3");
 
+const { requireAuth } = require("../middleware/authMiddleware"); // 🔥 ADD
+
 const {
   getNonResidentsProfileByIdRaw,
   saveNonResidentPhoto,
 } = require("../models/nonResidentsProfileModel");
 
 const router = express.Router();
+router.use(requireAuth);
 
 /* ============================
    MULTER (MEMORY BUFFER)
